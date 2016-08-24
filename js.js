@@ -1,3 +1,13 @@
+// главный чекбокс
+var mainCheckbox = document.body.querySelector("#complete-all");
+// настройки
+var settingActive = document.body.querySelector(".setting-active");
+var settingAll = document.body.querySelector(".setting-all");
+var settingCompleted = document.body.querySelector(".setting-completed");
+// главные элементы
+var form = document.body.querySelector(".form")
+var input = document.body.querySelector("#input");
+
 function checkSetting() {
     // При добавлении заметки, нужно проверить, какая группа выбрана
     if (document.querySelector(".setting_selected")) {
@@ -21,7 +31,7 @@ function showAll() {
     if (document.querySelector(".setting_selected")) {
         document.querySelector(".setting_selected").classList.remove("setting_selected");
     }
-    document.querySelector(".setting-all").classList.add("setting_selected");
+    settingAll.classList.add("setting_selected");
     var array = document.querySelectorAll(".note");
     [].forEach.call(array, function(el) {
         el.style.display = "block";
@@ -33,7 +43,7 @@ function showActive() {
     if (document.querySelector(".setting_selected")) {
         document.querySelector(".setting_selected").classList.remove("setting_selected");
     }
-    document.querySelector(".setting-active").classList.add("setting_selected");
+    settingActive.classList.add("setting_selected");
     var array = document.querySelectorAll(".note");
     [].forEach.call(array, function(el) {
         el.style.display = "block";
@@ -49,7 +59,7 @@ function showCompleted() {
     if (document.querySelector(".setting_selected")) {
         document.querySelector(".setting_selected").classList.remove("setting_selected");
     }
-    document.querySelector(".setting-completed").classList.add("setting_selected");
+    settingCompleted.classList.add("setting_selected");
     var array = document.querySelectorAll(".note");
     [].forEach.call(array, function(el) {
         el.style.display = "none";
@@ -133,8 +143,8 @@ function deleteNote() {
     // удалить задачу
     this.parentElement.remove();
     if (!document.body.querySelector(".note")) {
-        document.body.querySelector("#complete-all").style.opacity = "0";
-        document.body.querySelector("#complete-all").disabled = true;
+        mainCheckbox.style.opacity = "0";
+        mainCheckbox.disabled = true;
     }
 }
 
@@ -145,15 +155,15 @@ function clearCompleted() {
         block.remove();
     })
     if (!document.body.querySelector(".note")) {
-        document.body.querySelector("#complete-all").style.opacity = "0";
-        document.body.querySelector("#complete-all").disabled = true;
+        mainCheckbox.style.opacity = "0";
+        mainCheckbox.disabled = true;
     }
 }
 
-function createNote() {
+function createNote(event) {
     // создать задачу
-    var input = document.body.querySelector("#input");
-    var form = document.body.querySelector(".form")
+    if (event.keyCode != 13)
+        return;
     if (input.value == "") {
         console.log("заметка не создана");
     } else {
@@ -176,8 +186,8 @@ function createNote() {
         console.log("заметка создана");
 
         if (document.body.querySelector(".note")) {
-            document.body.querySelector("#complete-all").style.opacity = "1";
-            document.body.querySelector("#complete-all").disabled = false;
+            mainCheckbox.style.opacity = "1";
+            mainCheckbox.disabled = false;
         }
         input.value = "";
 
@@ -187,19 +197,11 @@ function createNote() {
 }
 
 // основное текстовое поле
-var input = document.body.querySelector("#input");
-input.addEventListener("blur", createNote);
 
-
+input.addEventListener("keypress", createNote);
 // основной чекбокс для всех задач
-var mainCheckbox = document.body.querySelector("#complete-all");
+
 mainCheckbox.addEventListener("click", completeAll);
-
-
-// настройки
-var settingActive = document.body.querySelector(".setting-active");
-var settingAll = document.body.querySelector(".setting-all");
-var settingCompleted = document.body.querySelector(".setting-completed");
 
 settingActive.addEventListener("click", showActive);
 settingAll.addEventListener("click", showAll);
