@@ -1,4 +1,4 @@
-// (function() {
+(function() {
 // главный чекбокс
 var mainCheckbox = document.body.querySelector("#complete-all");
 // настройки
@@ -269,4 +269,4 @@ settingCompleted.addEventListener("click", showCompleted);
 
 var clearCompletedText = document.body.querySelector(".clear-completed");
 clearCompletedText.addEventListener("click", deleteCompleted);
-// }());
+}());
