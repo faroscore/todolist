@@ -15,7 +15,16 @@
         <span class="setting-all setting_selected">Все</span>
     </div>
     <span class="clear-completed">Стереть выполненные</span>
-    <script src="js.js"></script>
+
+    <script type="text/template" id="task_template">
+        <input type="checkbox" class="note__check">
+        <span class="note__text"><%=text%></span>
+        <span class="note__delete">x</span>
+    </script>
+    <script src="js/jquery-1.12.3.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/backbone.js"></script>
+    <script src="js/js.js"></script>
 </body>
 
 </html>

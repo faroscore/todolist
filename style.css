@@ -15,6 +15,10 @@ body {
     border-bottom: 1px solid;
 }
 
+.note_completed .note__text{
+    text-decoration: line-through;
+}
+
 .note__delete {
     color: #810606;
     position: absolute;
