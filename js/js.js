@@ -79,8 +79,15 @@ var TaskView = Backbone.View.extend({
             this.model.destroy();
             checkMainCheckbox();
         },
-        "click .note__text": function() {
-            console.log("ИЗМЕНЯЕМ ЗАДАЧУ");
+        "click .note__text": function(event) {
+            var target = event.target;
+            var textContent = target.textContent;
+            var html = "<input type='text' class='note__input' value='" + textContent + "'>";
+            target.style.display = "none";
+            target.insertAdjacentHTML("beforeBegin", html);
+            var noteInput = target.parentElement.querySelector(".note__input");
+            noteInput.model = this.model;
+            noteInput.addEventListener("keypress", recreateNote);
         }
     },
 
@@ -203,31 +210,6 @@ function showCompleted() {
     });
 }
 
-function recreateNode() {
-    // проверяем текст в поле
-    if (this.value) {
-        // текст есть
-        var text = this.value;
-        var textNote = this.parentElement.querySelector(".note__text");
-        textNote.style.display = "";
-        textNote.textContent = text;
-        this.remove();
-
-    } else {
-        // текста нет
-        deleteNote.apply(this);
-    }
-}
-
-function editNote() {
-    // создаем input
-    var html = "<input type='text' class='note__input' value='" + this.textContent + "'>";
-    this.insertAdjacentHTML("beforeBegin", html);
-    this.style.display = "none";
-    this.parentElement.querySelector("input[type='text']").addEventListener("blur", recreateNode);
-}
-
-
 function completeAll(event) {
     // Выполнить/Отменить выполнение всех задачи
     if (this.disabled)
@@ -241,41 +223,6 @@ function completeAll(event) {
     }
 }
 
-function forceComplete() {
-    // Выполнить задачу
-    this.querySelector(".note__text").style.textDecoration = "line-through";
-    this.querySelector(".note__check").checked = true;
-    this.classList.add("note_completed");
-}
-
-function forceUncomplete() {
-    // Отменить выполнение задачи
-    this.querySelector(".note__text").style.textDecoration = "";
-    this.querySelector(".note__check").checked = false;
-    this.classList.remove("note_completed");
-}
-
-
-function completeNote() {
-    // щелкнут чекбокс задачи, выполнить/отменить задачу
-    if (this.checked) {
-        this.parentElement.querySelector(".note__text").style.textDecoration = "line-through";
-        this.parentElement.classList.add("note_completed");
-    } else {
-        this.parentElement.querySelector(".note__text").style.textDecoration = "";
-        this.parentElement.classList.remove("note_completed");
-    }
-}
-
-
-function deleteNote() {
-    // удалить задачу
-    this.parentElement.remove();
-    if (!document.body.querySelector(".note")) {
-        mainCheckbox.style.opacity = "0";
-        mainCheckbox.disabled = true;
-    }
-}
 
 function deleteCompleted() {
     // удалить выполненные 
@@ -295,6 +242,18 @@ function createNote(event) {
     } else {
         console.log("Заметка некорректна");
     }
+}
+
+function recreateNote(event) {
+    if (event.keyCode != 13)
+        return;
+    if (this.value == ""){
+        this.model.destroy();
+        checkMainCheckbox();
+    }
+    else
+        this.model.set("text", this.value);
+
 }
 
 // основное текстовое поле
